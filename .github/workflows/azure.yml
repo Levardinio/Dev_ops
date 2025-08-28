@@ -1,0 +1,31 @@
+name: Terraform Plan and Apply
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/test-azure-login.yml'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test-azure-login:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Test Azure Login
+        run: |
+          az account show
